@@ -1,40 +1,18 @@
-import { useEffect, useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import Feather from 'react-native-vector-icons/Feather'
+import { RecoilRoot } from 'recoil';
 
-import 'react-native-gesture-handler'
-import { getFcmToken, registerListenerWithFCM } from './src/utils/_fcmHelper'
+import { ThemeProvider } from '@core/theme/theme-provider';
+import NotificationApp from './src';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  text_bold: {
-    fontWeight: '600',
-    color: 'black',
-    padding: 10
-  }
-})
+import 'react-native-gesture-handler';
 
 const App = () => {
-  const [icon, setFcmToken] = useState<string>('bell-off')
-  const unsubscribe = registerListenerWithFCM();
-
-  useEffect(() => {
-    getFcmToken();
-    return unsubscribe
-  }, []);
-  useEffect(() => {
-    console.log(unsubscribe)
-  }, [unsubscribe]);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text_bold}>Push Notification In Recat Native</Text>
-      <Feather name={icon} size={30} color="black" />
-    </View>
+    <RecoilRoot>
+      <ThemeProvider>
+        <NotificationApp />
+      </ThemeProvider>
+    </RecoilRoot>
   )
 }
 
