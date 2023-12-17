@@ -11,6 +11,7 @@
 #endif
 
 #import "RNPermissionsModule.h"
+#import "RNPermissionHandlerNotifications.h"
 
 FOUNDATION_EXPORT double RNPermissionsVersionNumber;
 FOUNDATION_EXPORT const unsigned char RNPermissionsVersionString[];
