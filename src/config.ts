@@ -1,0 +1,1 @@
+export const FAVORITES_KEY = process.env.REACT_NATIVE_FAVORITES_KEY || 'favorites'

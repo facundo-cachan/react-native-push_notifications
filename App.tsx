@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 
 import 'react-native-gesture-handler'
-import { getFcmToken, registerListenerWithFCM } from './src/utils/fcmHelper'
+import { getFcmToken, registerListenerWithFCM } from './src/utils/_fcmHelper'
 
 const styles = StyleSheet.create({
   container: {
