@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import { useRecoilValue } from 'recoil';
 
 import notifications from '@providers/recoil/atoms/notifications';
 import { getFcmToken, registerListenerWithFCM } from '@utils/_fcmHelper';
 
 import 'react-native-gesture-handler';
-import { useRecoilValue } from 'recoil';
 
 const styles = StyleSheet.create({
   container: {

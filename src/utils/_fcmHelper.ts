@@ -11,9 +11,9 @@ export const getFcmToken = async () => {
   await registerAppWithFCM();
   try {
     token = await messaging().getToken();
-    console.log('getFcmToken-->', token);
+    console.log('getFcmToken--> ', token)
   } catch (error) {
-    console.log('getFcmToken Device Token error ', error);
+    console.log('getFcmToken Device Token error ', error)
   }
   return token;
 };
@@ -22,17 +22,17 @@ export const getFcmToken = async () => {
 export async function registerAppWithFCM() {
   console.log(
     'registerAppWithFCM status',
-    messaging().isDeviceRegisteredForRemoteMessages,
+    messaging().isDeviceRegisteredForRemoteMessages
   );
   if (!messaging().isDeviceRegisteredForRemoteMessages) {
     await messaging()
       .registerDeviceForRemoteMessages()
       .then(status => {
-        console.log('registerDeviceForRemoteMessages status', status);
+        console.log('registerDeviceForRemoteMessages status', status)
       })
       .catch(error => {
-        console.log('registerDeviceForRemoteMessages error ', error);
-      });
+        console.log('registerDeviceForRemoteMessages error ', error)
+      })
   }
 }
 
@@ -40,24 +40,25 @@ export async function registerAppWithFCM() {
 export async function unRegisterAppWithFCM() {
   console.log(
     'unRegisterAppWithFCM status',
-    messaging().isDeviceRegisteredForRemoteMessages,
+    messaging().isDeviceRegisteredForRemoteMessages
   );
 
   if (messaging().isDeviceRegisteredForRemoteMessages) {
     await messaging()
       .unregisterDeviceForRemoteMessages()
       .then(status => {
-        console.log('unregisterDeviceForRemoteMessages status', status);
+        console.log('unregisterDeviceForRemoteMessages status', status)
       })
       .catch(error => {
-        console.log('unregisterDeviceForRemoteMessages error ', error);
-      });
+        console.log('unregisterDeviceForRemoteMessages error ', error)
+      })
   }
+
   await messaging().deleteToken();
   console.log(
     'unRegisterAppWithFCM status',
-    messaging().isDeviceRegisteredForRemoteMessages,
-  );
+    messaging().isDeviceRegisteredForRemoteMessages
+  )
 }
 
 export const checkApplicationNotificationPermission = async () => {
@@ -67,15 +68,15 @@ export const checkApplicationNotificationPermission = async () => {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
-    console.log('Authorization status:', authStatus);
+    console.log('Authorization status:', authStatus)
   }
   request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
     .then(result => {
-      console.log('POST_NOTIFICATIONS status:', result);
+      console.log('POST_NOTIFICATIONS status:', result)
     })
     .catch(error => {
-      console.log('POST_NOTIFICATIONS error ', error);
-    });
+      console.log('POST_NOTIFICATIONS error ', error)
+    })
 };
 
 //method was called to listener events from firebase for notification triger
@@ -83,14 +84,11 @@ export function registerListenerWithFCM() {
   const [_, setNotifications] = useRecoilState<NotificationProps[]>(notifications)
   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
     console.log('onMessage Received : ', JSON.stringify(remoteMessage));
-    const { title, body } = remoteMessage?.notification || {}
+    const { title, body } = remoteMessage?.notification || {};
 
-    if (
-      title &&
-      body
-    ) {
-      setNotifications((prev) => [...prev, { title, body, from: remoteMessage?.from ?? 'FCM' }])
-      onDisplayNotification(title, body, remoteMessage?.data);
+    if (title && body) {
+      setNotifications((prev) => [...prev, { title, body, from: remoteMessage?.from ?? 'FCM' }]);
+      onDisplayNotification(title, body, remoteMessage?.data)
     }
   });
   notifee.onForegroundEvent(({ type, detail }) => {
@@ -105,14 +103,14 @@ export function registerListenerWithFCM() {
         //     detail.notification.data.clickAction
         //   );
         // }
-        break;
+        break
     }
   });
 
   messaging().onNotificationOpenedApp(async remoteMessage => {
     console.log(
       'onNotificationOpenedApp Received',
-      JSON.stringify(remoteMessage),
+      JSON.stringify(remoteMessage)
     );
     // if (remoteMessage?.data?.clickAction) {
     //   onNotificationClickActionHandling(remoteMessage.data.clickAction);
@@ -125,37 +123,35 @@ export function registerListenerWithFCM() {
       if (remoteMessage) {
         console.log(
           'Notification caused app to open from quit state:',
-          remoteMessage.notification,
-        );
+          remoteMessage.notification
+        )
       }
     });
 
-  return unsubscribe;
+  return unsubscribe
 }
 
 //method was called to display notification
-async function onDisplayNotification(title, body, data) {
-  console.log('onDisplayNotification Adnan: ', JSON.stringify(data));
+async function onDisplayNotification(title: string, body: string, data: { [key: string]: string | object; } | undefined) {
+  console.log('onDisplayNotification: ', JSON.stringify(data));
 
   // Request permissions (required for iOS)
   await notifee.requestPermission();
   // Create a channel (required for Android)
   const channelId = await notifee.createChannel({
     id: 'default',
-    name: 'Default Channel',
+    name: 'Default Channel'
   });
 
   // Display a notification
   await notifee.displayNotification({
-    title: title,
-    body: body,
-    data: data,
+    title, body, data,
     android: {
       channelId,
       // pressAction is needed if you want the notification to open the app when pressed
       pressAction: {
-        id: 'default',
-      },
-    },
-  });
+        id: 'default'
+      }
+    }
+  })
 }
